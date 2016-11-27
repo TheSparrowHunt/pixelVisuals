@@ -2,10 +2,10 @@
 #include "stdio.h"
 
 //setting up the pixel array at the maximum for unsigned short
-std::array<char, 65536> pixelArray;
+std::array<unsigned int, 57600> pixelArray;
 ofImage displayImage;
 
-int windowHeight, windowWidth, pixelWidth, pixelHeight;
+int windowHeight, windowWidth, pixelWidth, pixelHeight, counter;
 
 ofColor colors [15];
 
@@ -37,8 +37,8 @@ void ofApp::resizeScaling(){
     displayImage.allocate(windowWidth, windowHeight, OF_IMAGE_COLOR);
     
     //defining pixel sizes
-    pixelWidth = (int)windowWidth/sqrt(pixelArray.size());
-    pixelHeight = (int)windowHeight/sqrt(pixelArray.size());
+    pixelWidth = windowWidth/320;
+    pixelHeight = pixelWidth;
 }
 
 
@@ -54,12 +54,12 @@ void ofApp::setup(){
     
     //filling the pixel array with random chars (for now)
     for (auto i : pixelArray){
-        i = (char)(rand()%16);
+        i = 0;
     }
     
     setupColors();
     
-    
+    counter = 0;
     
 }
 
@@ -71,30 +71,36 @@ void ofApp::update(){
 //--------------------------------------------------------------
 void ofApp::draw(){
     resizeScaling();
+    
+    pixelArray[counter/2] = 15;
+    cout << counter;
+    counter = (counter+1)%(2*pixelArray.size());
+    
+    pixelArray[((counter)/2-1)%pixelArray.size()] = 0;
+    
     for(int i = 0; i < pixelArray.size(); i++){
         ofColor thisColor;
         
         thisColor = colors[pixelArray[i]];
         for(int j = 0; j < pixelWidth; j++){
             for (int k = 0; k < pixelHeight; k++){
-                displayImage.setColor((i%256*(pixelWidth))+j, ((i/256)*pixelHeight)+k, thisColor);
+                displayImage.setColor((i%320*(pixelWidth))+j, ((i/320)*pixelHeight)+k, thisColor);
             }
         
         }
-        //displayImage.setColor(i%256*(pixelWidth), floor(i/256)*pixelHeight, thisColor);
         
-        
-        //ofDrawRectangle((i%256)*(pixelWidth), i/256*pixelHeight, pixelWidth, pixelHeight);
         
     }
     displayImage.update();
     
     displayImage.draw(0, 0);
-    //cout << &displayImage.getPixels() << endl;
-    for (unsigned int i = 0; i < pixelArray.size(); i++){
-        pixelArray[i] = (char)(rand()%16);
-    }
-    cout << ofGetFrameRate() << endl;
+    
+    
+    
+//    for (unsigned int i = 0; i < pixelArray.size(); i++){
+//        pixelArray[i] = (char)(rand()%16);
+//    }
+    //cout << ofGetFrameRate() << endl;
     
 }
 
