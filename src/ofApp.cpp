@@ -36,10 +36,32 @@ void ofApp::resizeScaling(){
     //getting height and width
     windowHeight = ofGetWindowHeight();
     windowWidth = ofGetWindowWidth();
-    displayImage.allocate(windowWidth, windowHeight, OF_IMAGE_COLOR);
+    //window size locking
+    for(unsigned int i = 1; i < 20; i++ ){
+        //if window is less than 320(big pixel width)*i
+        if(windowWidth < 320*i){
+            //protection against setting the window space to nothing
+            if (i > 1){
+                //allocate the display image at the correct size
+                displayImage.allocate(320*(i-1), 180*(i-1), OF_IMAGE_COLOR);
+                //lock the screen width and height to the size of the displayImage
+                windowWidth = 320*(i-1);
+                break;
+            }
+            else{
+                //smallest possible 1:1 ration with the pixel Array
+                displayImage.allocate(320, 180, OF_IMAGE_COLOR);
+                windowWidth = 320;
+                break;
+            }
+        }
+        
+    }
+    //locking the window to a 16:9 width:height ratio
+    ofSetWindowShape(windowWidth, (windowWidth/16)*9);
     
     //defining pixel sizes
-    pixelWidth = windowWidth/320;
+    pixelWidth = displayImage.getWidth()/320;
     pixelHeight = pixelWidth;
 }
 
@@ -50,9 +72,6 @@ void ofApp::setup(){
     ofSetFrameRate(60);
     
     resizeScaling();
-    
-    
-    
     
     //filling the pixel array with random chars (for now)
     for (auto i : pixelArray){
@@ -80,12 +99,13 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
-
+    resizeScaling();
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-    resizeScaling();
+    
+    ofBackground(colors[0]);
     
     //getting mouse position and constraining values to within window
     if (mouseX > 0){
@@ -119,16 +139,17 @@ void ofApp::draw(){
     mappedMouseDirect = (mappedMouse[1]*320)+mappedMouse[0];
     
     //TESTING
-    for(int i = 0; i < 10000; i++){
+    for(int i = 0; i < 100; i++){
         pixelArray[counter] = (pixelArray[counter]-1)%16;
-        counter = (counter+320+otherCounter)%pixelArray.size();
+        counter = (counter+320*(otherCounter))%pixelArray.size();
         counter++;
-        
+        otherCounter= otherCounter - counter;
     }
     if (ofGetFrameNum()%600 == 0){
         otherCounter++;
     }
     //otherCounter++;
+    
     for(int i = 0; i < pixelArray.size(); i++){
         if (pixelArray[i] != previousPixelArray[i]){
             ofColor thisColor;
