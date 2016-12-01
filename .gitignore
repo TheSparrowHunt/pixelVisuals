@@ -165,7 +165,7 @@ Desktop.ini
 *.app
 
 *.xcactivitylog
-
+DerivedData/
 
 .mailmap
 /apps*/

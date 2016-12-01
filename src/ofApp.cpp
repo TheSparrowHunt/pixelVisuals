@@ -62,7 +62,7 @@ void ofApp::setup(){
     setupColors();
     
     counter = 0;
-    otherCounter = 0;
+    otherCounter = 1;
     
     //zero the display (removing visual glitches)
     for(int i = 0; i < pixelArray.size(); i++){
@@ -93,7 +93,7 @@ void ofApp::draw(){
             constrainedMouse[0] = mouseX;
         }
         else{
-            constrainedMouse[0] = windowWidth;
+            constrainedMouse[0] = windowWidth-1;
         }
     }
     else{
@@ -105,7 +105,7 @@ void ofApp::draw(){
             constrainedMouse[1] = mouseY;
         }
         else{
-            constrainedMouse[1] = windowHeight;
+            constrainedMouse[1] = windowHeight-1;
         }
     }
     else{
@@ -119,16 +119,16 @@ void ofApp::draw(){
     mappedMouseDirect = (mappedMouse[1]*320)+mappedMouse[0];
     
     //TESTING
-    for(int i = 0; i < 1; i++){
+    for(int i = 0; i < 10000; i++){
         pixelArray[counter] = (pixelArray[counter]-1)%16;
-        counter = (counter-(int)(sin((double)(otherCounter/(180*PI)))*320))%(pixelArray.size());
+        counter = (counter+320+otherCounter)%pixelArray.size();
         counter++;
         
     }
-    /*if (ofGetFrameNum()%600 == 0){
+    if (ofGetFrameNum()%600 == 0){
         otherCounter++;
-    }*/
-    otherCounter++;
+    }
+    //otherCounter++;
     for(int i = 0; i < pixelArray.size(); i++){
         if (pixelArray[i] != previousPixelArray[i]){
             ofColor thisColor;
