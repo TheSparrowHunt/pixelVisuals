@@ -164,5 +164,8 @@ Desktop.ini
 *.out
 *.app
 
+*.xcactivitylog
+
+
 .mailmap
 /apps*/
