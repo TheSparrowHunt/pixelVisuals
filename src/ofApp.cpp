@@ -1,11 +1,13 @@
 #include "ofApp.h"
 #include "stdio.h"
+#include "math.h"
 
 //setting up the pixel array at the maximum for unsigned short
-std::array<unsigned int, 57600> pixelArray;
+std::array<unsigned int, 57600> pixelArray, previousPixelArray;
 ofImage displayImage;
 
-int windowHeight, windowWidth, pixelWidth, pixelHeight, counter;
+int windowHeight, windowWidth, pixelWidth, pixelHeight, counter, otherCounter, mappedMouseDirect;
+std::array<signed int, 2> constrainedMouse, mappedMouse;
 
 ofColor colors [15];
 
@@ -60,6 +62,19 @@ void ofApp::setup(){
     setupColors();
     
     counter = 0;
+    otherCounter = 0;
+    
+    //zero the display (removing visual glitches)
+    for(int i = 0; i < pixelArray.size(); i++){
+            ofColor thisColor;
+            thisColor = colors[pixelArray[i]];
+            for(int j = 0; j < pixelWidth; j++){
+                for (int k = 0; k < pixelHeight; k++){
+                    displayImage.setColor((i%320*(pixelWidth))+j, ((i/320)*pixelHeight)+k, thisColor);
+                }
+                
+            }
+        }
     
 }
 
@@ -72,21 +87,58 @@ void ofApp::update(){
 void ofApp::draw(){
     resizeScaling();
     
-    pixelArray[counter/2] = 15;
-    cout << counter;
-    counter = (counter+1)%(2*pixelArray.size());
+    //getting mouse position and constraining values to within window
+    if (mouseX > 0){
+        if (mouseX < windowWidth){
+            constrainedMouse[0] = mouseX;
+        }
+        else{
+            constrainedMouse[0] = windowWidth;
+        }
+    }
+    else{
+        constrainedMouse[0] = 0;
+    }
     
-    pixelArray[((counter)/2-1)%pixelArray.size()] = 0;
+    if (mouseY > 0){
+        if (mouseY < windowHeight){
+            constrainedMouse[1] = mouseY;
+        }
+        else{
+            constrainedMouse[1] = windowHeight;
+        }
+    }
+    else{
+        constrainedMouse[1] = 0;
+    }
     
+    for (int i = 0; i < mappedMouse.size(); i++){
+        mappedMouse[i] = constrainedMouse[i]/pixelWidth;
+    }
+    //320*yPosition + x position
+    mappedMouseDirect = (mappedMouse[1]*320)+mappedMouse[0];
+    
+    //TESTING
+    for(int i = 0; i < 1; i++){
+        pixelArray[counter] = (pixelArray[counter]-1)%16;
+        counter = (counter-(int)(sin((double)(otherCounter/(180*PI)))*320))%(pixelArray.size());
+        counter++;
+        
+    }
+    /*if (ofGetFrameNum()%600 == 0){
+        otherCounter++;
+    }*/
+    otherCounter++;
     for(int i = 0; i < pixelArray.size(); i++){
-        ofColor thisColor;
+        if (pixelArray[i] != previousPixelArray[i]){
+            ofColor thisColor;
+            thisColor = colors[pixelArray[i]];
+            for(int j = 0; j < pixelWidth; j++){
+                for (int k = 0; k < pixelHeight; k++){
+                    displayImage.setColor((i%320*(pixelWidth))+j, ((i/320)*pixelHeight)+k, thisColor);
+                }
         
-        thisColor = colors[pixelArray[i]];
-        for(int j = 0; j < pixelWidth; j++){
-            for (int k = 0; k < pixelHeight; k++){
-                displayImage.setColor((i%320*(pixelWidth))+j, ((i/320)*pixelHeight)+k, thisColor);
             }
-        
         }
         
         
@@ -95,12 +147,8 @@ void ofApp::draw(){
     
     displayImage.draw(0, 0);
     
+    cout << mappedMouseDirect << endl;
     
-    
-//    for (unsigned int i = 0; i < pixelArray.size(); i++){
-//        pixelArray[i] = (char)(rand()%16);
-//    }
-    //cout << ofGetFrameRate() << endl;
     
 }
 
@@ -126,7 +174,7 @@ void ofApp::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
-
+    
 }
 
 //--------------------------------------------------------------
