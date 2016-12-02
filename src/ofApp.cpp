@@ -151,9 +151,12 @@ void ofApp::draw(){
     //otherCounter++;
     
     for(int i = 0; i < pixelArray.size(); i++){
+        //checking if pixels are different from the last frame
         if (pixelArray[i] != previousPixelArray[i]){
+            //if they are different
             ofColor thisColor;
             thisColor = colors[pixelArray[i]];
+            //draw the changes
             for(int j = 0; j < pixelWidth; j++){
                 for (int k = 0; k < pixelHeight; k++){
                     displayImage.setColor((i%320*(pixelWidth))+j, ((i/320)*pixelHeight)+k, thisColor);
@@ -164,12 +167,10 @@ void ofApp::draw(){
         
         
     }
+    //update the image
     displayImage.update();
-    
+    //draw the image
     displayImage.draw(0, 0);
-    
-    cout << mappedMouseDirect << endl;
-    
     
 }
 
