@@ -167,12 +167,10 @@ void ofApp::draw(){
         
         
     }
+    //update the image
     displayImage.update();
-    
+    //draw the image
     displayImage.draw(0, 0);
-    
-    cout << mappedMouseDirect << endl;
-    
     
 }
 
