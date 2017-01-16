@@ -23,7 +23,8 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
         void randomPixels();
     
-        std::array<unsigned int, 57600> pixelArray;
+        std::array<unsigned int, 57600>* pixelArray;
+        std::array<unsigned int, 57600>* previousPixelArray;
         int windowHeight, windowWidth, counter;
         ofColor colors [16];
 		

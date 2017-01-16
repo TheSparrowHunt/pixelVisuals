@@ -3,7 +3,8 @@
 #include "math.h"
 
 //setting up the pixel array at the maximum for unsigned short
-std::array<unsigned int, 57600> pixelArray, previousPixelArray;
+std::array<unsigned int, 57600>* pixelArray;
+std::array<unsigned int, 57600>* previousPixelArray;
 ofImage displayImage;
 
 int windowHeight, windowWidth, pixelWidth, pixelHeight, counter, otherCounter, mappedMouseDirect;
@@ -68,13 +69,15 @@ void ofApp::resizeScaling(){
 
 //--------------------------------------------------------------
 void ofApp::setup(){
+    pixelArray = new std::array<unsigned int, 57600>;
+    previousPixelArray = new std::array<unsigned int, 57600>;
     
     ofSetFrameRate(60);
     
     resizeScaling();
     
     //filling the pixel array with random chars (for now)
-    for (auto i : pixelArray){
+    for (auto i : *pixelArray){
         i = 0;
     }
     
@@ -84,9 +87,9 @@ void ofApp::setup(){
     otherCounter = 1;
     
     //zero the display (removing visual glitches)
-    for(int i = 0; i < pixelArray.size(); i++){
+    for(int i = 0; i < pixelArray->size(); i++){
             ofColor thisColor;
-            thisColor = colors[pixelArray[i]];
+            thisColor = colors[(*pixelArray)[i]];
             for(int j = 0; j < pixelWidth; j++){
                 for (int k = 0; k < pixelHeight; k++){
                     displayImage.setColor((i%320*(pixelWidth))+j, ((i/320)*pixelHeight)+k, thisColor);
@@ -140,8 +143,8 @@ void ofApp::draw(){
     
     //TESTING
     for(int i = 0; i < 100; i++){
-        pixelArray[counter] = (pixelArray[counter]-1)%16;
-        counter = (counter+320*(otherCounter))%pixelArray.size();
+        (*pixelArray)[counter] = ((*pixelArray)[counter]-1)%16;
+        counter = (counter+320*(otherCounter))%pixelArray->size();
         counter++;
         otherCounter= otherCounter - counter;
     }
@@ -150,10 +153,10 @@ void ofApp::draw(){
     }
     //otherCounter++;
     
-    for(int i = 0; i < pixelArray.size(); i++){
-        if (pixelArray[i] != previousPixelArray[i]){
+    for(int i = 0; i < pixelArray->size(); i++){
+        if ((*pixelArray)[i] != (*previousPixelArray)[i]){
             ofColor thisColor;
-            thisColor = colors[pixelArray[i]];
+            thisColor = colors[(*pixelArray)[i]];
             for(int j = 0; j < pixelWidth; j++){
                 for (int k = 0; k < pixelHeight; k++){
                     displayImage.setColor((i%320*(pixelWidth))+j, ((i/320)*pixelHeight)+k, thisColor);
