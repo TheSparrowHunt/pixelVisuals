@@ -1,5 +1,5 @@
 #include "ofApp.h"
-#include "stdio.h"
+//#include "stdio.h"
 #include "math.h"
 
 //setting up the pixel array at the maximum for unsigned short
@@ -11,6 +11,8 @@ int windowHeight, windowWidth, pixelWidth, pixelHeight, counter, otherCounter, m
 std::array<signed int, 2> constrainedMouse, mappedMouse;
 
 ofColor colors [15];
+
+std::vector<Drawer*> drawers;
 
 void ofApp::setupColors(){
     //setting up colors
@@ -110,6 +112,46 @@ void ofApp::draw(){
     
     ofBackground(colors[0]);
     
+    mapMouse();
+    
+    for(auto i : drawers){
+        i->draw();
+    }
+    
+//    //TESTING
+//    for(int i = 0; i < 100; i++){
+//        (*pixelArray)[counter] = ((*pixelArray)[counter]-1)%16;
+//        counter = (counter+320*(otherCounter))%pixelArray->size();
+//        counter++;
+//        otherCounter= otherCounter - counter;
+//    }
+//    if (ofGetFrameNum()%600 == 0){
+//        otherCounter++;
+//    }
+//    //otherCounter++;
+    
+    for(int i = 0; i < pixelArray->size(); i++){
+        if ((*pixelArray)[i] != (*previousPixelArray)[i]){
+            ofColor thisColor;
+            thisColor = colors[(*pixelArray)[i]];
+            for(int j = 0; j < pixelWidth; j++){
+                for (int k = 0; k < pixelHeight; k++){
+                    displayImage.setColor((i%320*(pixelWidth))+j, ((i/320)*pixelHeight)+k, thisColor);
+                }
+        
+            }
+        }
+        
+        
+    }
+    //update the image
+    displayImage.update();
+    //draw the image
+    displayImage.draw(0, 0);
+    
+}
+
+void ofApp::mapMouse(){
     //getting mouse position and constraining values to within window
     if (mouseX > 0){
         if (mouseX < windowWidth){
@@ -141,38 +183,8 @@ void ofApp::draw(){
     //320*yPosition + x position
     mappedMouseDirect = (mappedMouse[1]*320)+mappedMouse[0];
     
-    //TESTING
-    for(int i = 0; i < 100; i++){
-        (*pixelArray)[counter] = ((*pixelArray)[counter]-1)%16;
-        counter = (counter+320*(otherCounter))%pixelArray->size();
-        counter++;
-        otherCounter= otherCounter - counter;
-    }
-    if (ofGetFrameNum()%600 == 0){
-        otherCounter++;
-    }
-    //otherCounter++;
-    
-    for(int i = 0; i < pixelArray->size(); i++){
-        if ((*pixelArray)[i] != (*previousPixelArray)[i]){
-            ofColor thisColor;
-            thisColor = colors[(*pixelArray)[i]];
-            for(int j = 0; j < pixelWidth; j++){
-                for (int k = 0; k < pixelHeight; k++){
-                    displayImage.setColor((i%320*(pixelWidth))+j, ((i/320)*pixelHeight)+k, thisColor);
-                }
-        
-            }
-        }
-        
-        
-    }
-    //update the image
-    displayImage.update();
-    //draw the image
-    displayImage.draw(0, 0);
-    
 }
+
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
@@ -196,7 +208,7 @@ void ofApp::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
-    
+    drawers.push_back(new Drawer(mappedMouseDirect, pixelArray));
 }
 
 //--------------------------------------------------------------

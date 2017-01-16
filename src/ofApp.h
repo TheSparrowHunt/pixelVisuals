@@ -28,7 +28,9 @@ class ofApp : public ofBaseApp{
         std::array<unsigned int, 57600>* previousPixelArray;
         int windowHeight, windowWidth, counter;
         ofColor colors [16];
+        std::vector<Drawer*> drawers;
 		
         void setupColors();
-    void resizeScaling();
+        void mapMouse();
+        void resizeScaling();
 };

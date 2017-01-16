@@ -10,10 +10,16 @@
 #define Drawer_hpp
 
 #include <stdio.h>
+#include <array>
+using namespace std;
 
 class Drawer{
 public:
-    Drawer();
+    unsigned int position;
+    std::array<unsigned int, 57600>* drawspace;
+    
+    Drawer(int _position, std::array<unsigned int, 57600>* _drawSpace);
+    void draw();
 };
 
 #endif /* Drawer_hpp */
