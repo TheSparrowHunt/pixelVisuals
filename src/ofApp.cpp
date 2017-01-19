@@ -1,18 +1,4 @@
 #include "ofApp.h"
-//#include "stdio.h"
-#include "math.h"
-
-//setting up the pixel array at the maximum for unsigned short
-std::array<unsigned int, 57600>* pixelArray;
-std::array<unsigned int, 57600>* previousPixelArray;
-ofImage displayImage;
-
-int windowHeight, windowWidth, pixelWidth, pixelHeight, counter, otherCounter, mappedMouseDirect;
-std::array<signed int, 2> constrainedMouse, mappedMouse;
-
-ofColor colors [15];
-
-std::vector<Drawer*> drawers;
 
 void ofApp::setupColors(){
     //setting up colors
@@ -100,6 +86,12 @@ void ofApp::setup(){
             }
         }
     
+    //initialising new drawer state
+    newDrawerState = 'q';
+    //initialising a speed value for new Drawers and life value
+    speed = 1;
+    life = 100;
+    
 }
 
 //--------------------------------------------------------------
@@ -112,24 +104,29 @@ void ofApp::draw(){
     
     ofBackground(colors[0]);
     
-    mapMouse();
+    //"draws" each of the Drawers in drawers
+    for_each(drawers.begin(), drawers.end(), [](Drawer* d){d->draw();});
     
-    for(auto i : drawers){
-        i->draw();
+    //iterator that deallocates memory and removes the drawer from the vector.
+    for(auto it = drawers.begin(); it != drawers.end(); ){
+        if ((*it)->state == 0){
+            delete *it;
+            it = drawers.erase(it);
+        }
+        else{
+            ++it;
+        }
     }
     
-//    //TESTING
-//    for(int i = 0; i < 100; i++){
-//        (*pixelArray)[counter] = ((*pixelArray)[counter]-1)%16;
-//        counter = (counter+320*(otherCounter))%pixelArray->size();
-//        counter++;
-//        otherCounter= otherCounter - counter;
-//    }
-//    if (ofGetFrameNum()%600 == 0){
-//        otherCounter++;
-//    }
-//    //otherCounter++;
+    //removes a drawer from the vector of drawers if it's state is 0, need to delete
+//    drawers.erase(
+//        remove_if(drawers.begin(), drawers.end(), [](Drawer* d){ return d->state == 0;}),
+//                  drawers.end()
+//                  );
     
+    
+    //much more efficient method of drawing
+    //draws only the changes to an image, then displays the image at a 1:1 pixel ratio.
     for(int i = 0; i < pixelArray->size(); i++){
         if ((*pixelArray)[i] != (*previousPixelArray)[i]){
             ofColor thisColor;
@@ -180,7 +177,6 @@ void ofApp::mapMouse(){
     for (int i = 0; i < mappedMouse.size(); i++){
         mappedMouse[i] = constrainedMouse[i]/pixelWidth;
     }
-    //320*yPosition + x position
     mappedMouseDirect = (mappedMouse[1]*320)+mappedMouse[0];
     
 }
@@ -193,12 +189,23 @@ void ofApp::keyPressed(int key){
 
 //--------------------------------------------------------------
 void ofApp::keyReleased(int key){
-
+    //if a key is released
+    switch(key){
+        case 'q' : newDrawerState = 'q';
+            break;
+        case 'a' : newDrawerState = 'a';
+            break;
+        case 'w' : speed+=1;
+            break;
+        case 's' : speed--;
+            break;
+    }
+    
 }
 
 //--------------------------------------------------------------
 void ofApp::mouseMoved(int x, int y ){
-
+    mapMouse();
 }
 
 //--------------------------------------------------------------
@@ -208,7 +215,11 @@ void ofApp::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
-    drawers.push_back(new Drawer(mappedMouseDirect, pixelArray));
+    switch (newDrawerState){
+        case 'q' : drawers.push_back(new Drawer(mappedMouseDirect, pixelArray, speed, life));
+            break;
+        case 'a' : drawers.push_back(new DrawerModeQ(mappedMouseDirect, pixelArray, speed, life));            break;
+    }
 }
 
 //--------------------------------------------------------------

@@ -3,6 +3,8 @@
 #include "ofMain.h"
 #include "stdio.h"
 #include "Drawer.hpp"
+#include "DrawerModeQ.hpp"
+#include "math.h"
 
 class ofApp : public ofBaseApp{
 
@@ -26,11 +28,17 @@ class ofApp : public ofBaseApp{
     
         std::array<unsigned int, 57600>* pixelArray;
         std::array<unsigned int, 57600>* previousPixelArray;
-        int windowHeight, windowWidth, counter;
+        int windowHeight, windowWidth, pixelWidth, pixelHeight, counter, otherCounter, mappedMouseDirect;
         ofColor colors [16];
         std::vector<Drawer*> drawers;
-		
+    
+        std::array<signed int, 2> constrainedMouse, mappedMouse;
+        ofImage displayImage;
         void setupColors();
         void mapMouse();
         void resizeScaling();
+    
+        char newDrawerState;
+        int speed;
+        unsigned int life;
 };

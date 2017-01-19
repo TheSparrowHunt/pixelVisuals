@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		23A9CA471E3053D000FC3E67 /* DrawerModeQ.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 23A9CA451E3053D000FC3E67 /* DrawerModeQ.cpp */; };
 		36AC6DE61DF17F9D00680FE7 /* Drawer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 36AC6DE41DF17F9D00680FE7 /* Drawer.cpp */; };
 		E4328149138ABC9F0047C5CB /* openFrameworksDebug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E4328148138ABC890047C5CB /* openFrameworksDebug.a */; };
 		E4B69E200A3A1BDC003C02F2 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4B69E1D0A3A1BDC003C02F2 /* main.cpp */; };
@@ -43,6 +44,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		23A9CA451E3053D000FC3E67 /* DrawerModeQ.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DrawerModeQ.cpp; sourceTree = "<group>"; };
+		23A9CA461E3053D000FC3E67 /* DrawerModeQ.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = DrawerModeQ.hpp; sourceTree = "<group>"; };
 		23ED1E071DE7BD1C00F38CA9 /* main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = main.h; sourceTree = "<group>"; };
 		36AC6DE41DF17F9D00680FE7 /* Drawer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Drawer.cpp; sourceTree = "<group>"; };
 		36AC6DE51DF17F9D00680FE7 /* Drawer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Drawer.hpp; sourceTree = "<group>"; };
@@ -112,6 +115,8 @@
 				E4B69E1F0A3A1BDC003C02F2 /* ofApp.h */,
 				36AC6DE41DF17F9D00680FE7 /* Drawer.cpp */,
 				36AC6DE51DF17F9D00680FE7 /* Drawer.hpp */,
+				23A9CA451E3053D000FC3E67 /* DrawerModeQ.cpp */,
+				23A9CA461E3053D000FC3E67 /* DrawerModeQ.hpp */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
@@ -215,6 +220,7 @@
 				36AC6DE61DF17F9D00680FE7 /* Drawer.cpp in Sources */,
 				E4B69E200A3A1BDC003C02F2 /* main.cpp in Sources */,
 				E4B69E210A3A1BDC003C02F2 /* ofApp.cpp in Sources */,
+				23A9CA471E3053D000FC3E67 /* DrawerModeQ.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
