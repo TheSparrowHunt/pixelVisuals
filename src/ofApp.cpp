@@ -1,7 +1,7 @@
 #include "ofApp.h"
 
 
-
+//Open Frameworks
 
 void ofApp::setupColors(){
     //setting up colors
