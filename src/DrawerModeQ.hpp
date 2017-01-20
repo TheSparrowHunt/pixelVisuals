@@ -19,7 +19,8 @@ public:
     DrawerModeQ(int _position, std::array<unsigned int, 57600>* _drawSpace, int _speed, int _life) : Drawer(_position, _drawSpace, _speed, _life){
         
     }
-    virtual void draw();
+    void draw();
+    
 };
 
 #endif /* DrawerModeQ_hpp */

@@ -10,6 +10,6 @@
 
 void DrawerModeQ::draw(){
     (*drawspace)[position] = ((*drawspace)[position]+1)%15;
-    position = positive_modulo(position*speed, 57600);
+    position = positive_modulo(position, 57600);
     lifeCheck();
 }

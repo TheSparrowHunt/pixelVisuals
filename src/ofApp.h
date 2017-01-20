@@ -37,6 +37,7 @@ class ofApp : public ofBaseApp{
         void setupColors();
         void mapMouse();
         void resizeScaling();
+        void clearDisplay();
     
         char newDrawerState;
         int speed;

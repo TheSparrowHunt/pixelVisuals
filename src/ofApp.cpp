@@ -1,5 +1,8 @@
 #include "ofApp.h"
 
+
+
+
 void ofApp::setupColors(){
     //setting up colors
     
@@ -25,19 +28,25 @@ void ofApp::resizeScaling(){
     //getting height and width
     windowHeight = ofGetWindowHeight();
     windowWidth = ofGetWindowWidth();
+    //this is currently hard coded, future refactor will introduce a way to manually assign the drawspace size
     //window size locking
     for(unsigned int i = 1; i < 20; i++ ){
+        
         //if window is less than 320(big pixel width)*i
         if(windowWidth < 320*i){
+            
             //protection against setting the window space to nothing
             if (i > 1){
+                
                 //allocate the display image at the correct size
                 displayImage.allocate(320*(i-1), 180*(i-1), OF_IMAGE_COLOR);
+                
                 //lock the screen width and height to the size of the displayImage
                 windowWidth = 320*(i-1);
                 break;
             }
             else{
+                
                 //smallest possible 1:1 ration with the pixel Array
                 displayImage.allocate(320, 180, OF_IMAGE_COLOR);
                 windowWidth = 320;
@@ -46,10 +55,12 @@ void ofApp::resizeScaling(){
         }
         
     }
-    //locking the window to a 16:9 width:height ratio
+    //locking the window to a 16:9 width:height ratio, this will need to be refactored later
+    //to accommodate for non 16:9 resolutions
     ofSetWindowShape(windowWidth, (windowWidth/16)*9);
     
     //defining pixel sizes
+    //REFACTOR later
     pixelWidth = displayImage.getWidth()/320;
     pixelHeight = pixelWidth;
 }
@@ -57,17 +68,16 @@ void ofApp::resizeScaling(){
 
 //--------------------------------------------------------------
 void ofApp::setup(){
+    //setting up the arrays
     pixelArray = new std::array<unsigned int, 57600>;
     previousPixelArray = new std::array<unsigned int, 57600>;
-    
+    //setting the framerate, useful for TESTing
     ofSetFrameRate(60);
-    
+    //protection against the application launching in an unsupported resolution
     resizeScaling();
     
-    //filling the pixel array with random chars (for now)
-    for (auto i : *pixelArray){
-        i = 0;
-    }
+    //zeroing the pixel array (ready for the user to use)
+    clearDisplay();
     
     setupColors();
     
@@ -106,24 +116,6 @@ void ofApp::draw(){
     
     //"draws" each of the Drawers in drawers
     for_each(drawers.begin(), drawers.end(), [](Drawer* d){d->draw();});
-    
-    //iterator that deallocates memory and removes the drawer from the vector.
-    for(auto it = drawers.begin(); it != drawers.end(); ){
-        if ((*it)->state == 0){
-            delete *it;
-            it = drawers.erase(it);
-        }
-        else{
-            ++it;
-        }
-    }
-    
-    //removes a drawer from the vector of drawers if it's state is 0, need to delete
-//    drawers.erase(
-//        remove_if(drawers.begin(), drawers.end(), [](Drawer* d){ return d->state == 0;}),
-//                  drawers.end()
-//                  );
-    
     
     //much more efficient method of drawing
     //draws only the changes to an image, then displays the image at a 1:1 pixel ratio.
@@ -195,10 +187,16 @@ void ofApp::keyReleased(int key){
             break;
         case 'a' : newDrawerState = 'a';
             break;
-        case 'w' : speed+=1;
+        case 'w' : speed++;
             break;
         case 's' : speed--;
             break;
+        case 'e' : life++;
+            break;
+            //protecting against < 2 life
+        case 'd' : if (life < 2){life = 1;} else {life--;};
+            break;
+        
     }
     
 }
@@ -216,9 +214,16 @@ void ofApp::mouseDragged(int x, int y, int button){
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
     switch (newDrawerState){
-        case 'q' : drawers.push_back(new Drawer(mappedMouseDirect, pixelArray, speed, life));
+        case 'a' : drawers.push_back(new Drawer(mappedMouseDirect, pixelArray, speed, life));
             break;
-        case 'a' : drawers.push_back(new DrawerModeQ(mappedMouseDirect, pixelArray, speed, life));            break;
+        case 'q' : drawers.push_back(new DrawerModeQ(mappedMouseDirect, pixelArray, speed, life));            break;
+    }
+    cout << newDrawerState;
+}
+
+void ofApp::clearDisplay(){
+    for (unsigned int i : *pixelArray){
+        i = 0;
     }
 }
 
