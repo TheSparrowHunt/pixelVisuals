@@ -111,11 +111,21 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-    
     ofBackground(colors[0]);
     
     //"draws" each of the Drawers in drawers
     for_each(drawers.begin(), drawers.end(), [](Drawer* d){d->draw();});
+    
+    for (auto it = drawers.begin(); it!=drawers.end();)
+    {
+        if((*it)->life <=0){
+            delete (*it);
+            drawers.erase(it);
+        }
+        else{
+            ++it;
+        }
+    }
     
     //much more efficient method of drawing
     //draws only the changes to an image, then displays the image at a 1:1 pixel ratio.
